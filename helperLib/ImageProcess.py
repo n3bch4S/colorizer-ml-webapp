@@ -47,9 +47,9 @@ def postProcessImage(image: Image.Image, size: tuple[int, int]) -> Image.Image:
     return newImage
 
 
-def reconstructImage(ABImage, LImage: Tensor) -> Image.Image:
+def reconstructImage(ABImage: Tensor, LImage: Tensor) -> Image.Image:
     labMatrix: ndarray = np.zeros((224, 224, 3))
-    labMatrix[:, :, 0] = LImage[0, 0].numpy()
+    labMatrix[:, :, 0] = LImage[0].numpy()
     labMatrix[:, :, 1] = ABImage[0, 0].detach().numpy() * 128
     labMatrix[:, :, 2] = ABImage[0, 1].detach().numpy() * 128
     rgbMatrix: ndarray = (color.lab2rgb(labMatrix) * 255).astype(np.uint8)
@@ -58,9 +58,9 @@ def reconstructImage(ABImage, LImage: Tensor) -> Image.Image:
 
 
 def recolorImage(image: Image.Image) -> Image.Image:
-    imageSize = image.size
+    imageSize: tuple[int, int] = image.size
     allLImage, LImage = preprocessImage(image)
-    ABImage = predict(allLImage)
+    ABImage: Tensor = predict(allLImage)
     coloredImage: Image.Image = reconstructImage(ABImage, LImage)
     coloredImage = postProcessImage(coloredImage, imageSize)
     return coloredImage
