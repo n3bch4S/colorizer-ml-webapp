@@ -58,16 +58,19 @@ if __name__ == "__main__":
     )
     color: str = colorPicker.color_picker(
         label="Color Picker",
+        help="Coming Soon.",
         value=config.DEFAULT_COLOR_PICKER,
-        disabled=not hasSomeFile,
+        disabled=True,
         label_visibility="collapsed",
     )
     isEraser: bool = eraserButton.checkbox(
         label="Eraser",
-        disabled=not hasSomeFile,
+        help="Coming Soon.",
+        disabled=True,
     )
     rotateRightButton.button(
-        label="Right",
+        label=":arrow_lower_right:",
+        help="Rotate the image clockwise",
         on_click=ComponentControl.rotateBothImage,
         args=(
             selectedFilename,
@@ -79,7 +82,8 @@ if __name__ == "__main__":
         use_container_width=True,
     )
     rotateLeftButton.button(
-        label="Left",
+        label=":arrow_lower_left:",
+        help="Rotate the image counterclockwise",
         on_click=ComponentControl.rotateBothImage,
         args=(
             selectedFilename,
@@ -92,6 +96,7 @@ if __name__ == "__main__":
     )
     resetButton.button(
         label="Reset",
+        help="Reset the image position.",
         on_click=ComponentControl.resetBothImage,
         args=(
             selectedFilename,
@@ -100,6 +105,7 @@ if __name__ == "__main__":
             files,
             ImageStore.resetImageInDict,
         ),
+        type="primary",
         disabled=not hasSomeFile,
         use_container_width=True,
     )
