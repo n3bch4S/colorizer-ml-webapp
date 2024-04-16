@@ -14,7 +14,7 @@ To get started with this Colorizer project, follow these steps:
 1. Clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/n3bch4s/colorizer-ml-webapp.git
 ```
 
 2. Create a virtual environment and install the required packages:
