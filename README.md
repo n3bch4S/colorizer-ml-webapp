@@ -17,6 +17,12 @@ To get started with this Colorizer project, follow these steps:
 git clone https://github.com/n3bch4s/colorizer-ml-webapp.git
 ```
 
+2. Go to project directory:
+
+```bash
+cd colorizer-ml-webapp
+```
+
 2. Create a virtual environment and install the required packages:
 
 ```bash
