@@ -3,12 +3,13 @@ from skimage import color
 from numpy import ndarray
 from torch import Tensor
 from torchvision import transforms
+
 from helperLib import config, model
 
 import numpy as np
 import torch
 
-predict: model.vanilla_autoencoder = model.getTrainedModel()
+predict: dict[str, torch.nn.Module] = model.getTrainedModelDict()
 
 
 def preserveResize(
@@ -24,7 +25,7 @@ def preserveResize(
     return newImage
 
 
-def preprocessImage(image: Image.Image) -> tuple[Tensor, Tensor]:
+def preprocessImage(image: Image.Image, isThreeChanel: bool) -> tuple[Tensor, Tensor]:
     image = image.convert("RGB")
 
     image = transforms.Resize((config.MODEL_WIDTH, config.MODEL_HEIGHT), Image.BICUBIC)(  # type: ignore
@@ -36,9 +37,12 @@ def preprocessImage(image: Image.Image) -> tuple[Tensor, Tensor]:
     tensorImage: Tensor = transforms.ToTensor()(labImage)
 
     LImage: Tensor = tensorImage[[0], ...]
-    allLImage: Tensor = torch.cat((LImage, LImage, LImage), dim=0).reshape(
-        1, 3, config.MODEL_HEIGHT, config.MODEL_HEIGHT
-    )
+    if isThreeChanel:
+        allLImage: Tensor = torch.cat((LImage, LImage, LImage), dim=0).reshape(
+            1, 3, config.MODEL_HEIGHT, config.MODEL_HEIGHT
+        )
+    else:
+        allLImage: Tensor = LImage.reshape((1, 1, 224, 224))
     return allLImage, LImage
 
 
@@ -57,10 +61,11 @@ def reconstructImage(ABImage: Tensor, LImage: Tensor) -> Image.Image:
     return completeImage
 
 
-def recolorImage(image: Image.Image) -> Image.Image:
+def recolorImage(image: Image.Image, modelName: str) -> Image.Image:
+    isThreeChanel: bool = "auto" in modelName
     imageSize: tuple[int, int] = image.size
-    allLImage, LImage = preprocessImage(image)
-    ABImage: Tensor = predict(allLImage)
+    allLImage, LImage = preprocessImage(image, isThreeChanel)
+    ABImage: Tensor = predict[modelName](allLImage)
     coloredImage: Image.Image = reconstructImage(ABImage, LImage)
     coloredImage = postProcessImage(coloredImage, imageSize)
     return coloredImage
@@ -69,5 +74,5 @@ def recolorImage(image: Image.Image) -> Image.Image:
 if __name__ == "__main__":
     img: Image.Image = Image.open("helperLib/cat.jpg")
     img.show()
-    predictedImage: Image.Image = recolorImage(img)
+    predictedImage: Image.Image = recolorImage(img, "auto")
     predictedImage.show()

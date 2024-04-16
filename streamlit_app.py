@@ -56,6 +56,12 @@ if __name__ == "__main__":
         disabled=not hasSomeFile,
         label_visibility="collapsed",
     )
+    selectedModelname: str | None = fileSelectBox.selectbox(
+        label="Select the desire model.",
+        options=ImageProcess.predict.keys(),
+        disabled=not hasSomeFile,
+        label_visibility="visible",
+    )
     color: str = colorPicker.color_picker(
         label="Color Picker",
         help="Coming Soon.",
@@ -114,8 +120,10 @@ if __name__ == "__main__":
     processBox, originalBox = st.columns(2)
     ImageStore.updateImageDict(origImageDict, files)
     ImageStore.updateImageDict(editingImageDict, files)
-    if selectedFilename is not None:
-        ImageStore.recolorImageFrom(origImageDict, editingImageDict, selectedFilename)
+    if selectedFilename is not None and selectedModelname is not None:
+        ImageStore.recolorImageFrom(
+            origImageDict, editingImageDict, selectedFilename, selectedModelname
+        )
         origImage: Image.Image = ImageProcess.preserveResize(
             origImageDict[selectedFilename]
         )

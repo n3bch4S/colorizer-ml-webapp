@@ -55,11 +55,12 @@ def recolorImageFrom(
     origImageDict: dict[str, Image.Image],
     newImageDict: dict[str, Image.Image],
     imageName: str,
+    modelName: str,
 ) -> None:
     if imageName not in origImageDict or imageName not in newImageDict:
         return
     image: Image.Image = origImageDict[imageName]
-    newImageDict[imageName] = ImageProcess.recolorImage(image)
+    newImageDict[imageName] = ImageProcess.recolorImage(image, modelName)
 
 
 def updateFiles(files: list[UploadedFile], referenceFiles: list[UploadedFile]) -> None:
