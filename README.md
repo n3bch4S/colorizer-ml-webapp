@@ -44,4 +44,4 @@ The project structure is as follows:
 - `streamlit_app.py`: The main Streamlit app file.
 - `requirements.txt`: A list of required packages.
 - `helperLib/`: A directory containing any helper library files used in the app.
-- `models/`: A directory containing any machine learning models state used in the app.
+- `checkpoint/`: A directory containing any machine learning models state used in the app.
